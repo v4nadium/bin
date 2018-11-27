@@ -1,0 +1,178 @@
+#!/usr/bin/env python
+#-*- coding:Utf-8 -*-
+# galculator 1.5
+# os., sys., gtk, pygtk, math - python2.7.2 (fr, tab)
+#
+import os; import sys
+from gtk import *; from pygtk import *
+from math import *
+
+# VARIABLES
+vert = gdk.Color('#A0FFA0')
+bleu = gdk.Color('#B0B0FF')
+rouge = gdk.Color('#FFA8A8')
+gris = gdk.Color('#CCC')
+
+ans = float() # Galculator.calculer
+# FUNCTIONS
+def ch_couleur(bouton, couleur):
+	bouton.modify_bg(STATE_NORMAL, couleur)
+	bouton.modify_bg(STATE_ACTIVE, couleur)
+	bouton.modify_bg(STATE_PRELIGHT, couleur)
+	bouton.modify_bg(STATE_SELECTED, couleur)
+
+# CLASSES
+class Galculator:
+	def __init__(self):
+		
+		################m_box######################
+		#                                         #
+		# ###############calcul_box############## #
+		# #  [self.calcul]   #    [valider]     # #
+		# ####################                  # #
+		# #  [self.resultat] #                  # #
+		# #############m_boutons_box############# #
+		# #                                     # #
+		# # ############bouton_box1############ # #
+		# # #  [b7] #  [b8] # [b9] # [b_plus] # # #
+		# # ################################### # #
+		# #                                     # #
+		# # ############bouton_box2############ # #
+		# # #  [b4] # [b5] # [b6] # [b_moins] # # #
+		# # ################################### # #
+		# #                                     # #
+		# # ############bouton_box3############ # #
+		# # #  [b1]  #  [b2] # [b3] # [b_mul] # # #
+		# # ################################### # #
+		# #                                     # #
+		# # ############bouton_box4############ # #
+		# # #  [b0] #  [b_point] # [b_div] #  # # #
+		# # ################################### # #
+		# #                                     # #
+		# ####################################### #
+		#                                         #
+		###########################################
+		
+		
+		bouton_box1 = HBox()
+		self.b7 = Button("7"); ch_couleur(self.b7, bleu)
+		self.b8 = Button("8"); ch_couleur(self.b8, bleu)
+		self.b9 = Button("9"); ch_couleur(self.b9, bleu)
+		self.b_plus = Button("+"); ch_couleur(self.b_plus, rouge)
+		box1_l = [self.b7,self. b8, self.b9, self.b_plus]
+		for b in box1_l: bouton_box1.pack_start(b)
+		
+		bouton_box2 = HBox()
+		self.b4 = Button("4"); ch_couleur(self.b4, bleu)
+		self.b5 = Button("5"); ch_couleur(self.b5, bleu)
+		self.b6 = Button("6"); ch_couleur(self.b6, bleu)
+		self.b_moins = Button("-"); ch_couleur(self.b_moins, rouge)
+		box2_l = [self.b4, self.b5, self.b6, self.b_moins]
+		for b in box2_l: bouton_box2.pack_start(b)
+		
+		bouton_box3 = HBox()
+		self.b1 = Button("1"); ch_couleur(self.b1, bleu)
+		self.b2 = Button("2"); ch_couleur(self.b2, bleu)
+		self.b3 = Button("3"); ch_couleur(self.b3, bleu)
+		self.b_mul = Button("*"); ch_couleur(self.b_mul, rouge)
+		box3_l = [self.b1, self.b2, self.b3,self. b_mul]
+		for b in box3_l: bouton_box3.pack_start(b)
+		
+		bouton_box4 = HBox()
+		self.b0 = Button("0"); ch_couleur(self.b0, bleu)
+		self.b_point = Button("."); ch_couleur(self.b_point, bleu)
+		self.b_div = Button("/"); ch_couleur(self.b_div, rouge)
+		self.boite_plus = HBox()
+		self.b_ans = Button("ans"); self.boite_plus.pack_start(self.b_ans)
+		ch_couleur(self.b_ans, vert)
+		self.b_ans.connect("clicked", self.add)
+		self.b_supp = Button("supp"); self.boite_plus.pack_start(self.b_supp)
+		ch_couleur(self.b_supp, vert)
+		self.b_supp.connect("clicked", self.effacer)
+		box4_l = [self.b0, self.b_point, self.b_div, self.boite_plus]
+		for b in box4_l: bouton_box4.pack_start(b)
+		
+		# Connect boutons
+		boutons_listes = [box1_l, box2_l, box3_l, box4_l]
+		for liste_boutons in boutons_listes:
+			for bouton in liste_boutons:
+				try: bouton.connect("clicked", self.add)
+				except TypeError: pass # boite avec b_ans et b_supp
+		
+
+		m_boutons_box = VBox()
+		m_boutons_box_l = [bouton_box1, bouton_box2, bouton_box3, bouton_box4]
+		for boite in m_boutons_box_l: m_boutons_box.pack_start(boite)
+		
+		calcul_box = HBox(homogeneous=False)
+		calc_result_box = VBox()
+		self.calcul = Entry()
+		self.calcul.connect('activate', self.calculer)
+		valider = Button("Calculer")
+		valider.modify_bg(STATE_NORMAL, gris)
+		valider.set_border_width(30)
+		valider.connect("clicked", self.calculer)
+		ch_couleur(valider, gris)
+		self.resultat = Label("")
+		self.resultat.set_size_request(10, 20)
+		self.resultat.set_selectable(True)
+		calc_result_box.pack_start(self.calcul)
+		calc_result_box.pack_start(self.resultat)
+		calcul_box.pack_start(calc_result_box)
+		calcul_box.pack_start(valider)
+		m_box = VBox(homogeneous=False)
+		m_box_l = [calcul_box, m_boutons_box]
+		for element in m_box_l: m_box.pack_start(element)
+		
+		fen = Window()
+		fen.set_title("Galculator")
+		fen.connect("destroy", main_quit)
+		fen.set_size_request(400, 300)
+		fen.resize(100, 200)
+		fen.add(m_box)
+		fen.show_all()
+	
+	
+	def calculer(self, widget):
+		if self.calcul.get_text() == 'la réponse à la vie, l\'univers et le reste' or self.calcul.get_text() == 'the answer to life, the universe and everything':
+			self.resultat.set_text('42')
+			return None
+		if self.calcul.get_text() == '42':
+			self.resultat.set_text("""HAPPY EASTER !""")
+			return None
+		try:
+			try:
+				expression = self.calcul.get_text().replace('/', '.0/')
+				resultat = eval(expression)
+			except:
+				resultat = eval(self.calcul.get_text())
+			if int(resultat) == float(resultat) : resultat = int(resultat)
+			else : resultat = float(resultat)
+			self.answer = resultat
+		except SyntaxError: resultat = "SyntaxError"
+		self.resultat.set_text(str(resultat))
+		
+		global ans
+		ans = self.answer
+	
+	def add(self, widget):
+		to_add = widget.get_label()
+		if widget.get_label() == "ans":
+			to_add = self.resultat.get_text()
+		self.calcul.set_text(self.calcul.get_text()+to_add)
+	
+	def effacer(self, widget):
+		etape1 = list(self.calcul.get_text())
+		etape1.pop(-1)
+		etape2 = str() #init
+		for e in etape1: etape2 = etape2 + str(e)
+		self.calcul.set_text(etape2)
+
+
+# FUNCTIONS
+
+# END
+if __name__=='__main__':
+	Galculator()
+	main()
+

@@ -1,0 +1,27 @@
+#! /bin/bash
+# extract http://www.bordel-de-nerd.net/2010/08/configurer-son-terminal-bash/#content
+
+ex ()
+{
+  if [ -f $1 ] ; then
+    case $1 in
+      *.tar.bz2)   tar xjvf $1   ;;
+      *.tar.gz)    tar xzvf $1   ;;
+      *.bz2)       bunzip2 $1   ;;
+      *.rar)       unrar x $1     ;;
+      *.gz)        gunzip $1    ;;
+      *.tar)       tar xvf $1    ;;
+      *.tbz2)      tar xjvf $1   ;;
+      *.tgz)       tar xzvf $1   ;;
+      *.zip)       unzip $1     ;;
+      *.Z)         uncompress $1;;
+      *.7z)        7z x $1      ;;
+      *)           echo -e "${bldred}'$1' ne peut pas etre decompresse avec extract" ;;
+    esac
+  else
+    echo -e "\n${bldred}'$1' n'est pas un fichier valide"
+  fi
+}
+
+ex $1
+

@@ -1,0 +1,90 @@
+#! /usr/bin/env python
+# -*- coding:Utf-8 -*-
+# devine0.9
+# random, os, - python2.7.1 (fr, tab)
+#
+from random import *
+from os import system as bash
+
+# FUNCTIONS
+def demander(min, max, chances, iterations):
+	prompt = '\n(' + str(chances - iterations) + ' chances) Un nombre entre ' + str(min) + ' et ' + str(max) + ' : '
+	n = raw_input(prompt)
+	try: n = int(n)
+	except ValueError: print "Erreur : vous devez entrer un nombre!"; demander(min, max, chances, iterations)
+	return n
+
+def devine(mn, mx, ix):
+	i = 0 #while
+	x = randint(mn, mx)
+	n = float(0.3) #initialisation
+	print '\n***Devine***\n'
+	
+	while (n != x) and (i < ix):
+		n = demander(mn, mx, ix, i)
+		i += 1 #while
+		if n < x:
+			print '\t\t\t\tC\'est plus!'
+		elif n > x:
+			print '\t\t\t\tC\'est moins!'
+	if n == x:
+		if i == ix:
+			print '\nOui, %(rep)d !! C\'était juste !' %{'rep':x}
+		elif i <= ix:
+			print '\nOui, %(rep)d !! Vous avez trouvé en %(i)d essais' %{'rep':x, 'i':i}
+	elif i >= ix:
+		print('\n Perdu, c\'était %d...' % x);
+		try: player.lifes -= 1;
+		except: pass;
+
+
+# nvK = niveau K ; mnK = minimum du niveau K ; mxK = maximum du niveau K ; iK = compteur ou 'vies' du niveau K
+nv1 = mn1, mx1, i1 = 0, 10, 3
+nv2 = mn2, mx2, i2 = 0, 100, 7
+nv3 = mn3, mx3, i3 = 0, 1000, 15
+nv4 = mn4, mx4, i4 = 0, 10000, 50
+
+def jeu():
+	print "Niveaux :\n\n1.	De %(mn1)d a %(mx1)d\n\n2.	De %(mn2)d a %(mx2)d\n\n3.	De %(mn3)d a %(mx3)d\n\n4.	De %(mn4)d a %(mx4)d\n\n(highscore ; credits ; exit)" % {'mn1':mn1, 'mx1':mx1, 'mn2':mn2, 'mx2':mx2, 'mn3':mn3, 'mx3':mx3, 'mn4':mn4, 'mx4':mx4}
+	niveau = raw_input('\nNiveau : ')
+	
+	if (niveau == '1'):
+		devine(mn1, mx1, i1);
+	elif (niveau == '2'):
+		devine(mn2, mx2, i2);
+	elif (niveau == '3'):
+		devine(mn3, mx3, i3);
+	elif (niveau == '4'):
+		devine(mn4, mx4, i4);
+		
+	elif (niveau == 'highscores'):
+		print "#the highscores"
+		raw_input();
+	elif (niveau == 'credits'):
+		print("\n##################################\n\"Devine 0.9\"\nJeu de hasard\n\n\"Devine\" par night_penguin, 2010-2011.\nGPL-2010\n##################################");
+		raw_input();
+		jeu();
+	elif (niveau == 'exit'):
+		quit();
+	elif niveau == 'egg easter':
+		print """\t   _____\n\t  /^v^v^\\ \n\t /       \\\n\t|\\/\\/\\/\\/\\|\n\t|         |\n\t \\><><><>/\n\t  \\_____/\n\n\tHAPPY EASTER !"""
+	else:
+		bash('clear')
+		print '\tcan\'t\n';
+		jeu();
+
+def main():
+	bash('clear')
+	jeu()
+	nouvelle_partie = raw_input('\n\nNouvelle partie? (O/n) ')
+	while (nouvelle_partie.lower() == 'o') or (not nouvelle_partie):
+		main()
+	fin = raw_input('\n\n*** Fin ***')
+	if fin:
+		main()
+	else:
+		quit()
+		
+if __name__ == "__main__":
+	main()
+

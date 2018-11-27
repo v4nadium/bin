@@ -1,0 +1,25 @@
+# PS1 perso
+PS1='${debian_chroot:+($debian_chroot)}\[\033[31m\]\u \[\033[00m\][\[\033[34m\]\w\[\033[00m\]] » '
+
+### ADDED BY ME
+
+# mes scripts
+export PATH="$PATH:/home/baptiste/bin/"
+
+# meteo
+alias meteo="curl -H \"Accept-Language: fr\" wttr.in";
+
+# top versio graphique ncurse
+alias gotop="/home/baptiste/bin/gotop/scripts/gotop"
+
+# mises à jour
+alias maj="sudo apt update && sudo apt upgrade && sudo apt autoremove && sudo apt autoclean";
+
+# youtube-dl
+alias yx='cd ~/Musique/YouTube/; youtube-dl -x'
+
+#correcteur orthographique de commandes
+TF_ALIAS=fuck alias fuck='eval $(thefuck $(fc -ln -1)); history -r'
+
+# cd apres cls
+alias cds="source cls"

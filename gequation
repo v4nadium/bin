@@ -1,0 +1,72 @@
+#! /usr/bin/env python
+# -*- coding:Utf-8 -*-
+# equation 0.9rc
+# gtk, pygtk, math, pango - python2.7.2 (fr, tab)
+#
+from gtk import *
+from pygtk import *
+from math import sqrt
+import pango # police d'écriture
+
+# CLASSES
+class Equation:
+	def __init__(self):
+		self.f_1 = Window()
+		self.f_1.set_title("Equations du second degré")
+		self.f_1.connect("destroy", self.fermer_fenetre)
+		
+		self.b_calc = Button("Calculer")
+		self.reponse = Label("")
+		self.v_2 = VBox(2)
+		self.h_7 = HBox(7)
+		self.h_2 = HBox(2)
+		
+		self.e_x2 = Entry()
+		self.l_x2 = Label("x² + ")
+		self.e_x = Entry()
+		self.l_x = Label("x + ")
+		self.e_n = Entry()
+		self.e_n.connect('activate', self.calculer)
+		self.l_n = Label(" = 0")
+		
+		self.h_7.pack_start(self.e_x2)
+		self.h_7.pack_start(self.l_x2)
+		self.h_7.pack_start(self.e_x)
+		self.h_7.pack_start(self.l_x)
+		self.h_7.pack_start(self.e_n)
+		self.h_7.pack_start(self.l_n)
+		
+		self.v_2.pack_start(self.h_7)
+		self.v_2.pack_start(self.h_2)
+		self.h_2.pack_start(self.reponse)
+		self.h_2.pack_start(self.b_calc)
+		
+		self.b_calc.connect("clicked", self.calculer)
+		
+		self.f_1.add(self.v_2)
+		self.f_1.show_all()
+		
+	def calculer(self, widget):
+		a = float(self.e_x2.get_text())
+		b = float(self.e_x.get_text())
+		c = float(self.e_n.get_text())
+		delta = float(b**2 - 4*a*c)
+		# EGG EASTER
+		if a == 42 and b == 42 and c == 42:
+			police = pango.FontDescription("Monospace")
+			self.reponse.modify_font(police)
+			self.reponse.set_text("""\t   _____\n\t  /^v^v^\\ \n\t /       \\\n\t|\\/\\/\\/\\/\\|\n\t|         |\n\t \\><><><>/\n\t  \\_____/\n\n\tHAPPY EASTER !""")
+			return
+		# END EGG EASTER
+		try:
+			self.reponse.set_text("Delta = "+str(delta)+" ; S = { "+str((-b+sqrt(delta))/2*a)+" ; "+str((-b-sqrt(delta))/2*a)+" }")
+		except ValueError:
+			self.reponse.set_text('Math Error')
+
+	def fermer_fenetre(self, widget):
+		quit()
+
+
+Equation()
+main()
+
