@@ -4,7 +4,7 @@
 #
 
 from urllib import urlopen
-from commands import getoutput;
+#from commands import getoutput;
 from sys import argv
 
 # AIDE
@@ -27,7 +27,7 @@ if argv[1]=="--rhume" or argv[1]=="-r":
 	OPTIONS.append("rhume");
 
 
-nbColonnes = int(getoutput('echo $(tput cols)'))
+#nbColonnes = int(getoutput('echo $(tput cols)'))
 
 def getFrom_synonymo(mot, OPTIONS=[]):
 	
@@ -92,18 +92,19 @@ if __name__ == "__main__":
 	
 	else:
 		# formattage: trouver la longueur du mot le plus long
-		longueurMax = max(map(len, liste_synonymes)); # TODO: prendre en compte l'encodage qui fait foirer le comptage de caractères
-		
+#		longueurMax = max(map(len, liste_synonymes)); # TODO: prendre en compte l'encodage qui fait foirer le comptage de caractères
+#		
 		print mot, ":\n";
-		
-		colonne = 0;
+#		
+#		colonne = 0;
 		for syn in liste_synonymes:
-			print syn.ljust(longueurMax + 5),;
-			colonne += longueurMax + 5;
+#			print syn.ljust(longueurMax + 5),;
+#			colonne += longueurMax + 5;
+#			
+#			if colonne > nbColonnes - longueurMax-5:
+#				print '\n';
+#				colonne = 0;
+			print syn, '\n';
 			
-			if colonne > nbColonnes - longueurMax-5:
-				print '\n';
-				colonne = 0;
-			
-		print '\n\n[Synonymo.fr©]';
+		print '\n\n[synonymo.fr©]';
 		
