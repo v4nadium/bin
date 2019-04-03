@@ -6,13 +6,30 @@
 from urllib import urlopen
 from commands import getoutput;
 from sys import argv
+
+# AIDE
+help="""
+Utilisation: synonyme.py [OPTION] mot
+
+	mot Mot dont on veut les synonymes.
+	
+	OPTION
+
+		--rhume Retire les mots contenant m ou n pour faciliter la prononciation lors de congestion nasale.
+"""
 if len(argv) < 2 and __name__ == "__main__": # si pas (assez) d'argument, affch l'aide et quit :
 	print help
 	exit(1)
 
+# OPTIONS
+OPTIONS=[];
+if argv[1]=="--rhume" or argv[1]=="-r":
+	OPTIONS.append("rhume");
+
+
 nbColonnes = int(getoutput('echo $(tput cols)'))
 
-def getFrom_synonymo(mot):
+def getFrom_synonymo(mot, OPTIONS=[]):
 	
 	synPage = urlopen("http://www.synonymo.fr/synonyme/"+mot).read();
 	
@@ -35,16 +52,22 @@ def getFrom_synonymo(mot):
 		
 		synonyme.strip();
 		if synonyme.strip() != '':
+
 			synonymes.append(synonyme);
+		
+		if "rhume" in OPTIONS:
+			for synonyme in synonymes:
+				if 'n' in synonyme or 'm' in synonyme:
+					synonymes.remove(synonyme);
 	
 	return synonymes;
 
 
-def getFromWeb(mot):
+def getFromWeb(mot, OPTIONS=[]):
 	syns = [];
 	
 	# synonymo.fr
-	syns = getFrom_synonymo(mot);
+	syns = getFrom_synonymo(mot, OPTIONS);
 	
 	return syns;
 
@@ -53,13 +76,12 @@ def getFromWeb(mot):
 if __name__ == "__main__":
 	mot = argv[-1];
 	
-	liste_synonymes = getFromWeb(mot);
-	
+	liste_synonymes = getFromWeb(mot, OPTIONS=OPTIONS);
 	if not liste_synonymes:
 		#get from web
 		# est-on connecté à internet ?
 		try:
-			webpage = urlopen('http://www.perdu.com/').read() # perdu.com est une page *très* légère (< 1Ko) # TODO ping
+			webpage = urlopen('http://www.perdu.com/').read() # perdu.com est une page légère (< 1Ko) # TODO ping
 			print "Connecté à Internet.";
 		except IOError:
 			print "Connectez-vous à Internet."
@@ -69,7 +91,8 @@ if __name__ == "__main__":
 		print mot+":\n\nNon trouvé.";
 	
 	else:
-		longueurMax = max(map(len, liste_synonymes));
+		# formattage: trouver la longueur du mot le plus long
+		longueurMax = max(map(len, liste_synonymes)); # TODO: prendre en compte l'encodage qui fait foirer le comptage de caractères
 		
 		print mot, ":\n";
 		
@@ -82,5 +105,5 @@ if __name__ == "__main__":
 				print '\n';
 				colonne = 0;
 			
-		print '\n\n[Synonymo.fr © 2009 - 2016]';
+		print '\n\n[Synonymo.fr©]';
 		
