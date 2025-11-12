@@ -1,2 +1,2 @@
 # bin
-my ~/bin/
+my ~/bin/ NOT INTERESTING
